@@ -3,9 +3,11 @@ const titleField = document.querySelector('#title');
 const titleFieldDescription = document.querySelector('#other-job-role')
 const shirtFieldDesign = document.querySelector('#design');
 const shirtFieldColor = document.querySelector('#color');
+const activities = document.querySelector('#activities');
+const activitiesTotal = document.querySelector('#activities-cost');
+let currentSum = 0;
 
-console.log(titleField.querySelectorAll('option'));
-console.log(shirtFieldColor);
+console.log(activitiesTotal);
 
 // On load controls
 nameField.focus();
@@ -18,9 +20,26 @@ titleField.addEventListener ( 'change', e => e.target.value === 'other' ? titleF
 
 
 // Shirt field controls
-shirtFieldDesign.addEventListener ('change', e => {
+function shirtColorSelector(shirtType) {
+    for ( let i = 0; i < shirtFieldColor.children.length; i++) {
+        if ( shirtFieldColor.children[i].innerHTML.includes(shirtType) ) {
+            shirtFieldColor.children[i].style.display = 'initial'
+        } else {
+            shirtFieldColor.children[i].style.display = 'none'
+        }
+    }
+}
+
+shirtFieldDesign.addEventListener ( 'change', e => {
     shirtFieldColor.disabled = false;
-    if (e.target.value === 'js puns') {
-        shirtFieldColor.querySelector('option [data-theme = "heart js"]').style.display = 'hidden'
+    shirtFieldColor.children[0].innerHTML = 'Choose your color';
+    if ( e.target.value === 'js puns' ) {
+        shirtColorSelector('JS Puns')
+    }
+    if ( e.target.value === 'heart js' ) {
+        shirtColorSelector('I')
     }
 })
+
+
+// Register Controls
