@@ -5,6 +5,7 @@ const shirtFieldDesign = document.querySelector('#design');
 const shirtFieldColor = document.querySelector('#color');
 const activities = document.querySelector('#activities');
 const activitiesTotal = document.querySelector('#activities-cost');
+
 let currentSum = 0;
 
 console.log(activitiesTotal);
@@ -42,4 +43,15 @@ shirtFieldDesign.addEventListener ( 'change', e => {
 })
 
 
-// Register Controls
+// Register controls
+activities.addEventListener('change', e => {
+    // Pricing controls
+    const price = +e.target.getAttribute('data-cost');
+    e.target.checked === true ? currentSum += price : currentSum -= price;
+    console.log(currentSum)
+    activitiesTotal.innerHTML = `Total: $${currentSum}`
+
+    // Activity time controls
+    console.log(e.target.getAttribute('data-day-and-time'))
+    console.log(e.target.parentNode.nextElementSibling)
+})
