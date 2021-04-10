@@ -48,10 +48,14 @@ activities.addEventListener('change', e => {
     // Pricing controls
     const price = +e.target.getAttribute('data-cost');
     e.target.checked === true ? currentSum += price : currentSum -= price;
-    console.log(currentSum)
     activitiesTotal.innerHTML = `Total: $${currentSum}`
 
     // Activity time controls
-    console.log(e.target.getAttribute('data-day-and-time'))
-    console.log(e.target.parentNode.nextElementSibling)
+    for (let i = 0; i < e.target.parentNode.parentNode.children.length; i++) {
+        if ( e.target.checked && ( e.target.parentNode.parentNode.children[i].children[0].getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && e.target.parentNode.parentNode.children[i].children[0] !== e.target ) ){
+            e.target.parentNode.parentNode.children[i].children[0].disabled = true;
+        } else if ( e.target.checked === false && ( e.target.parentNode.parentNode.children[i].children[0].getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && e.target.parentNode.parentNode.children[i].children[0] !== e.target )) {
+            e.target.parentNode.parentNode.children[i].children[0].disabled = false;
+        }
+    }
 })
