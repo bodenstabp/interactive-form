@@ -31,7 +31,8 @@ titleField.addEventListener ( 'change', e => e.target.value === 'other' ? titleF
 // Shirt field controls
 function shirtColorSelector() {
     for ( let i = 0; i < shirtFieldColor.children.length; i++) {
-        shirtFieldColor.children[i].getAttribute('data-theme') === shirtFieldDesign.value ? shirtFieldColor.children[i].style.display = 'initial' : shirtFieldColor.children[i].style.display = 'none';
+        const currentTarget = shirtFieldColor.children[i]
+        currentTarget.getAttribute('data-theme') === shirtFieldDesign.value ? currentTarget.style.display = 'initial' : currentTarget.style.display = 'none';
     }
     shirtFieldColor.selectedIndex = 0;
 }
@@ -52,7 +53,7 @@ activities.addEventListener('change', e => {
 
     // Activity checkbox controls
     for (let i = 0; i < e.target.parentNode.parentNode.children.length; i++) {
-        let currentTarget = e.target.parentNode.parentNode.children[i].children[0]
+        const currentTarget = e.target.parentNode.parentNode.children[i].children[0]
         if ( e.target.checked && ( currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && currentTarget !== e.target ) ){
             currentTarget.disabled = true;
         } else if ( e.target.checked === false && currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time')) {
