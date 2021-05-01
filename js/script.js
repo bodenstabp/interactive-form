@@ -1,4 +1,6 @@
+const mainForm = document.querySelector('#main-form');
 const nameField = document.querySelector('#name');
+const emailField = document.querySelector('#email');
 const titleField = document.querySelector('#title');
 const titleFieldDescription = document.querySelector('#other-job-role')
 const shirtFieldDesign = document.querySelector('#design');
@@ -6,10 +8,13 @@ const shirtFieldColor = document.querySelector('#color');
 const activities = document.querySelector('#activities');
 const activitiesTotal = document.querySelector('#activities-cost');
 const paymentOptions = document.querySelector('#payment')
+const cardNumberField = document.querySelector('#cc-num')
+const zipCodeField = document.querySelector('#zip')
+const cvvField = document.querySelector('#cvv')
 const creditCard = document.querySelector('#credit-card')
 const payPal = document.querySelector('#paypal')
 const bitcoin = document.querySelector('#bitcoin')
-const submit = document.querySelector('button [type="submit"')
+const submit = document.querySelector('#main-form [type="submit"]')
 
 let currentSum = 0;
 
@@ -21,7 +26,6 @@ shirtFieldColor.disabled = true;
 paymentOptions.selectedIndex = 1;
 payPal.style.display = 'none';
 bitcoin.style.display = 'none';
-
 
 
 // Job field controls
@@ -48,7 +52,7 @@ shirtFieldDesign.addEventListener ( 'change', e => {
 activities.addEventListener('change', e => {
     // Pricing controls
     const price = +e.target.getAttribute('data-cost');
-    e.target.checked === true ? currentSum += price : currentSum -= price;
+    e.target.checked ? currentSum += price : currentSum -= price;
     activitiesTotal.innerHTML = `Total: $${currentSum}`
 
     // Activity checkbox controls
@@ -56,7 +60,7 @@ activities.addEventListener('change', e => {
         const currentTarget = e.target.parentNode.parentNode.children[i].children[0]
         if ( e.target.checked && ( currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && currentTarget !== e.target ) ){
             currentTarget.disabled = true;
-        } else if ( e.target.checked === false && currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time')) {
+        } else if ( e.target.checked === false && currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') ) {
             currentTarget.disabled = false;
         }
     }
@@ -68,7 +72,7 @@ paymentOptions.addEventListener ('change', e => {
     switch ( paymentOptions.value ) {
         case 'credit-card' :
             creditCard.style.display = 'block'
-            payPal.style.display = 'none';
+            paypal.style.display = 'none';
             bitcoin.style.display = 'none';
             break;
         case 'paypal' :
@@ -81,5 +85,19 @@ paymentOptions.addEventListener ('change', e => {
             creditCard.style.display = 'none';
             paypal.style.display = 'none';
             break;
+    }
+})
+
+
+// Form validation controls
+mainForm.addEventListener('click', event => {
+    if (event.target === submit) {
+        const nameRegEx = /^[A-Za-z]+ [A-Za-z-]+$/;
+        const emailRegEx = /^\w+@[A-Za-z]+\.(com|net|org|edu)$/;
+        const creditCardRegEx = /^\d{4}[ -]\d{4}[ -]\d{4}[ -]\d{4}$/;
+        if( nameRegEx.test( nameField.value ) || emailRegEx.test( emailField.value ) ) {
+            event.preventDefault;
+            console.log('hi')
+        }
     }
 })
