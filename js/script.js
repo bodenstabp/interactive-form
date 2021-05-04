@@ -34,7 +34,7 @@ titleField.addEventListener ( 'change', e => e.target.value === 'other' ? titleF
 
 // Shirt field controls
 function shirtColorSelector() {
-    for ( let i = 0; i < shirtFieldColor.children.length; i++) {
+    for ( let i = 0; i < shirtFieldColor.children.length; i++ ) {
         const currentTarget = shirtFieldColor.children[i]
         currentTarget.getAttribute('data-theme') === shirtFieldDesign.value ? currentTarget.style.display = 'initial' : currentTarget.style.display = 'none';
     }
@@ -56,7 +56,7 @@ activities.addEventListener('change', e => {
     activitiesTotal.innerHTML = `Total: $${currentSum}`
 
     // Activity checkbox controls
-    for (let i = 0; i < e.target.parentNode.parentNode.children.length; i++) {
+    for ( let i = 0; i < e.target.parentNode.parentNode.children.length; i++ ) {
         const currentTarget = e.target.parentNode.parentNode.children[i].children[0]
         if ( e.target.checked && ( currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && currentTarget !== e.target ) ){
             currentTarget.disabled = true;
@@ -90,14 +90,31 @@ paymentOptions.addEventListener ('change', e => {
 
 
 // Form validation controls
-mainForm.addEventListener('click', event => {
-    if (event.target === submit) {
+mainForm.addEventListener('click', e => {
+    if (e.target === submit) {
         const nameRegEx = /^[A-Za-z]+ [A-Za-z-]+$/;
         const emailRegEx = /^\w+@[A-Za-z]+\.(com|net|org|edu)$/;
-        const creditCardRegEx = /^\d{4}[ -]\d{4}[ -]\d{4}[ -]\d{4}$/;
-        if( nameRegEx.test( nameField.value ) || emailRegEx.test( emailField.value ) ) {
-            event.preventDefault;
-            console.log('hi')
+        const creditCardRegEx = /^(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})|(\d{4}[ -]?\d{3}[ -]?\d{3}[ -]?\d{3})$/;
+        const zipRegEx = /^\d{5}$/;
+        const cvvRegEx = /^\d{3}$/;
+        // Basic info validation
+        if( nameRegEx.test( !nameField.value ) ) {
+            e.preventDefault;
+        }
+        if( emailRegEx.test( !emailField.value ) ) {
+            e.preventDefault;
+        }
+        // Credit card validation
+        if ( paymentOptions.value === 'credit-card' ) {
+            if ( creditCardRegEx.test( !cardNumberField.value )) {
+                e.preventDefault
+            }
+            if ( zipRegEx.test( !zipCodeField.value )) {
+                e.preventDefault
+            }
+            if ( cvvRegEx.test( !cvvField.value )) {
+                e.preventDefault
+            }
         }
     }
 })
