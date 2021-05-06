@@ -16,6 +16,13 @@ const payPal = document.querySelector('#paypal')
 const bitcoin = document.querySelector('#bitcoin')
 const submit = document.querySelector('#main-form [type="submit"]')
 
+// Rwegular Expressions
+const nameRegEx = /^[A-Za-z]+ [A-Za-z-]+$/;
+const emailRegEx = /^\w+@[A-Za-z]+\.(com|net|org|edu)$/;
+const creditCardRegEx = /^(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})$|^(\d{4}[ -]?\d{3}[ -]?\d{3}[ -]?\d{3})$/;
+const zipRegEx = /^\d{5}$/;
+const cvvRegEx = /^\d{3}$/;
+
 let currentSum = 0;
 
 
@@ -52,10 +59,16 @@ shirtFieldDesign.addEventListener ( 'change', e => {
 activities.addEventListener('change', e => {
     // Pricing controls
     const price = +e.target.getAttribute('data-cost');
-    e.target.checked ? currentSum += price : currentSum -= price;
+    if ( e.target.checked ) {
+        currentSum += price;
+        e.target.parentNode.style.borderColor = 'green'
+    } else {
+        currentSum -= price;
+        e.target.parentNode.style.borderColor = 'rgba(36, 28, 21, 0.2)'
+    }
     activitiesTotal.innerHTML = `Total: $${currentSum}`
 
-    // Activity checkbox controls
+    // Prevents overlapping activities in checkboxes
     for ( let i = 0; i < e.target.parentNode.parentNode.children.length; i++ ) {
         const currentTarget = e.target.parentNode.parentNode.children[i].children[0]
         if ( e.target.checked && ( currentTarget.getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && currentTarget !== e.target ) ){
@@ -88,33 +101,57 @@ paymentOptions.addEventListener ('change', e => {
     }
 })
 
-
+ 
 // Form validation controls
-mainForm.addEventListener('click', e => {
-    if (e.target === submit) {
-        const nameRegEx = /^[A-Za-z]+ [A-Za-z-]+$/;
-        const emailRegEx = /^\w+@[A-Za-z]+\.(com|net|org|edu)$/;
-        const creditCardRegEx = /^(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})|(\d{4}[ -]?\d{3}[ -]?\d{3}[ -]?\d{3})$/;
-        const zipRegEx = /^\d{5}$/;
-        const cvvRegEx = /^\d{3}$/;
-        // Basic info validation
-        if( nameRegEx.test( !nameField.value ) ) {
-            e.preventDefault;
+function testValueValidity ( expression, testField ) {
+    testField.addEventListener ( 'input', (e) => {
+        if ( e.target === testField && expression.test( testField.value ) === false) {
+            testField.style.borderColor = 'orange';
+        } else {
+            testField.style.borderColor = 'green'
         }
-        if( emailRegEx.test( !emailField.value ) ) {
-            e.preventDefault;
+    })
+}
+
+testValueValidity( nameRegEx, nameField)
+testValueValidity( emailRegEx, emailField)
+testValueValidity( creditCardRegEx, cardNumberField)
+testValueValidity( zipRegEx, zipCodeField)
+testValueValidity( cvvRegEx, cvvField)
+
+// Checks that information is valid before submitting
+mainForm.addEventListener('submit', e => {
+    function testValidSubmission ( expression, testField, message) {
+        if( expression.test( testField.value ) === false ) {
+            e.preventDefault();
+            testField.style.borderColor = 'orange';
+            if ( testField !== cardNumberField ) {
+            alert (`Please make sure to enter ${message}.`)
+            }
         }
-        // Credit card validation
-        if ( paymentOptions.value === 'credit-card' ) {
-            if ( creditCardRegEx.test( !cardNumberField.value )) {
-                e.preventDefault
-            }
-            if ( zipRegEx.test( !zipCodeField.value )) {
-                e.preventDefault
-            }
-            if ( cvvRegEx.test( !cvvField.value )) {
-                e.preventDefault
-            }
-        }
+    }
+
+    // Basic info validation
+    testValidSubmission( nameRegEx, nameField, 'your name' );
+    testValidSubmission( emailRegEx, emailField, 'a proper email');
+
+    // Activity checkbox validation
+    if ( currentSum === 0 ) {
+        e.preventDefault();
+        alert('Please select at least one activity.')
+    }
+    
+    // Credit card validation
+    if ( paymentOptions.value === 'credit-card' ) {
+        testValidSubmission( creditCardRegEx, cardNumberField, 'correct credit card info' );
+        testValidSubmission( zipRegEx, zipCodeField, 'a valid zip code' );
+        testValidSubmission( cvvRegEx, cvvField, 'a proper CVV code' );
+    }
+    
+    const invalidCreditCardInfo = /\D/
+    if ( invalidCreditCardInfo.test( cardNumberField.value ) ) {
+        alert( 'Please only use digits for your card number.')
+    } else if ( cardNumberField.value.length < 13 || ( cardNumberField.value.length > 13 && cardNumberField.value.length < 16 ) || cardNumberField.value.length > 16 ) {
+        alert ('Please make sure to enter either a 13 or 16 digit credit card number.')
     }
 })
