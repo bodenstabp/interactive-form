@@ -6,20 +6,22 @@ const titleFieldDescription = document.querySelector('#other-job-role')
 const shirtFieldDesign = document.querySelector('#design');
 const shirtFieldColor = document.querySelector('#color');
 const activities = document.querySelector('#activities');
+const checkboxes = document.querySelectorAll('input[type = "checkbox"]');
 const activitiesTotal = document.querySelector('#activities-cost');
-const paymentOptions = document.querySelector('#payment')
-const cardNumberField = document.querySelector('#cc-num')
-const zipCodeField = document.querySelector('#zip')
-const cvvField = document.querySelector('#cvv')
-const creditCard = document.querySelector('#credit-card')
-const payPal = document.querySelector('#paypal')
-const bitcoin = document.querySelector('#bitcoin')
-const submit = document.querySelector('#main-form [type="submit"]')
+const paymentOptions = document.querySelector('#payment');
+const cardNumberField = document.querySelector('#cc-num');
+const zipCodeField = document.querySelector('#zip');
+const cvvField = document.querySelector('#cvv');
+const creditCard = document.querySelector('#credit-card');
+const payPal = document.querySelector('#paypal');
+const bitcoin = document.querySelector('#bitcoin');
+const submit = document.querySelector('#main-form [type="submit"]');
 
 // Rwegular Expressions
 const nameRegEx = /^[A-Za-z]+ [A-Za-z-]+$/;
 const emailRegEx = /^\w+@[A-Za-z]+\.(com|net|org|edu)$/;
 const creditCardRegEx = /^(\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4})$|^(\d{4}[ -]?\d{3}[ -]?\d{3}[ -]?\d{3})$/;
+const invalidCreditCardInfo = /\D/
 const zipRegEx = /^\d{5}$/;
 const cvvRegEx = /^\d{3}$/;
 
@@ -33,6 +35,16 @@ shirtFieldColor.disabled = true;
 paymentOptions.selectedIndex = 1;
 payPal.style.display = 'none';
 bitcoin.style.display = 'none';
+
+// Activity field target controls
+for( let i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('focus', e => {
+        e.target.parentNode.style.borderColor = 'blue';
+    })
+    checkboxes[i].addEventListener('blur', e => {
+        e.target.parentNode.style.borderColor = 'rgba(36, 28, 21, 0.2)';
+    })
+}
 
 
 // Job field controls
@@ -52,7 +64,7 @@ shirtFieldDesign.addEventListener ( 'change', e => {
     shirtFieldColor.disabled = false;
     shirtFieldColor.children[0].innerHTML = 'Choose your color';
     shirtColorSelector()
-})
+});
 
 
 // Register controls
@@ -77,7 +89,7 @@ activities.addEventListener('change', e => {
             currentTarget.disabled = false;
         }
     }
-})
+});
 
 
 // Payment info controls
@@ -99,12 +111,12 @@ paymentOptions.addEventListener ('change', e => {
             paypal.style.display = 'none';
             break;
     }
-})
+});
 
  
 // Form validation controls
 function testValueValidity ( expression, testField ) {
-    testField.addEventListener ( 'input', (e) => {
+    testField.addEventListener ( 'input', e => {
         if ( e.target === testField && expression.test( testField.value ) === false) {
             testField.style.borderColor = 'orange';
         } else {
@@ -112,22 +124,27 @@ function testValueValidity ( expression, testField ) {
         }
     })
 }
-
-testValueValidity( nameRegEx, nameField)
-testValueValidity( emailRegEx, emailField)
-testValueValidity( creditCardRegEx, cardNumberField)
-testValueValidity( zipRegEx, zipCodeField)
-testValueValidity( cvvRegEx, cvvField)
+testValueValidity( nameRegEx, nameField);
+testValueValidity( emailRegEx, emailField);
+testValueValidity( creditCardRegEx, cardNumberField);
+testValueValidity( zipRegEx, zipCodeField);
+testValueValidity( cvvRegEx, cvvField);
 
 // Checks that information is valid before submitting
 mainForm.addEventListener('submit', e => {
     function testValidSubmission ( expression, testField, message) {
-        if( expression.test( testField.value ) === false ) {
+        if ( expression.test( testField.value ) === false ) {
             e.preventDefault();
+            testField.parentNode.classList.add('not-valid')
+            testField.parentNode.classList.remove('valid')
             testField.style.borderColor = 'orange';
             if ( testField !== cardNumberField ) {
-            alert (`Please make sure to enter ${message}.`)
+                alert (`Please make sure to enter ${message}.`);
             }
+        }
+        if ( expression.test( testField.value ) ) {
+            testField.parentNode.classList.add('valid')
+            testField.parentNode.classList.remove('not-valid')
         }
     }
 
@@ -146,9 +163,7 @@ mainForm.addEventListener('submit', e => {
         testValidSubmission( creditCardRegEx, cardNumberField, 'correct credit card info' );
         testValidSubmission( zipRegEx, zipCodeField, 'a valid zip code' );
         testValidSubmission( cvvRegEx, cvvField, 'a proper CVV code' );
-    }
-    
-    const invalidCreditCardInfo = /\D/
+    }   
     if ( invalidCreditCardInfo.test( cardNumberField.value ) ) {
         alert( 'Please only use digits for your card number.')
     } else if ( cardNumberField.value.length < 13 || ( cardNumberField.value.length > 13 && cardNumberField.value.length < 16 ) || cardNumberField.value.length > 16 ) {
