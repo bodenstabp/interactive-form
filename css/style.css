@@ -29,7 +29,7 @@ header {
 	color: rgb(255, 255, 255);
 	width: 100%;
 	padding: 10px 0;
-	background: linear-gradient(90deg, rgba(213, 51, 105, 1) 0%, rgba(218, 174, 81, 1) 100%);
+	background: linear-gradient(90deg, rgb(22, 25, 204) 40%, rgba(218, 174, 81, 1) 100%);
 }
 
 .header-container {
@@ -195,7 +195,7 @@ button {
   width: calc(100% - 40px);
   margin: 25px auto;
   padding: 10px 25px;
-	background: rgb(213, 51, 105);
+	background: rgb(22, 25, 204);
   border-radius: 4px;
   border: 1px solid transparent;
   border-right: 1px solid rgba(36, 28, 21, 0.2);
