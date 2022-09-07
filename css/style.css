@@ -21,7 +21,7 @@ button {
 }
 
 body {
-  background: #AA8F66;
+  background: #F5E2C8;
 }
 
 header {
@@ -195,7 +195,7 @@ button {
   width: calc(100% - 40px);
   margin: 25px auto;
   padding: 10px 25px;
-	background: #1D3354;
+	background: #D88373;
   border-radius: 4px;
   border: 1px solid transparent;
   border-right: 1px solid rgba(36, 28, 21, 0.2);
